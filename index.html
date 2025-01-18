@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>テキスト比較ツール</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+        }
+        .highlight-add {
+            background-color: rgba(255, 0, 0, 0.3); /* 薄い赤 */
+        }
+        .highlight-remove {
+            background-color: rgba(0, 0, 255, 0.3); /* 薄い青 */
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .text-area {
+            width: 45%;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+        }
+        .button {
+            background-color: #26A79A;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #1E8A76;
+        }
+        .result-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .result-box {
+            width: 45%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            min-height: 100px;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>テキスト比較ツール</h1>
+    <div class="container">
+        <textarea id="text1" class="text-area" rows="10" cols="50"></textarea>
+        <textarea id="text2" class="text-area" rows="10" cols="50"></textarea>
+    </div>
+    <div class="container">
+        <button class="button" onclick="compareTexts()">比較する</button>
+    </div>
+    <div class="result-container">
+        <div id="result1" class="result-box"></div>
+        <div id="result2" class="result-box"></div>
+    </div>
+
+    <script>
+        function compareTexts() {
+            var text1 = escapeHtml(document.getElementById("text1").value);
+            var text2 = escapeHtml(document.getElementById("text2").value);
+
+            var result1Div = document.getElementById("result1");
+            var result2Div = document.getElementById("result2");
+            result1Div.innerHTML = ""; // 結果をクリア
+            result2Div.innerHTML = ""; // 結果をクリア
+
+            var diff = getDiff(text1, text2);
+            result1Div.innerHTML = diff.text1;
+            result2Div.innerHTML = diff.text2;
+        }
+
+        function getDiff(text1, text2) {
+            var diff = { text1: "", text2: "" };
+            var i = 0, j = 0;
+
+            while (i < text1.length || j < text2.length) {
+                if (i < text1.length && j < text2.length && text1[i] === text2[j]) {
+                    diff.text1 += text1[i];
+                    diff.text2 += text2[j];
+                    i++;
+                    j++;
+                } else {
+                    if (j < text2.length && (i >= text1.length || text1[i] !== text2[j])) {
+                        diff.text2 += "<span class='highlight-add'>" + text2[j] + "</span>";
+                        j++;
+                    }
+                    if (i < text1.length && (j >= text2.length || text1[i] !== text2[j])) {
+                        diff.text1 += "<span class='highlight-remove'>" + text1[i] + "</span>";
+                        i++;
+                    }
+                }
+            }
+
+            return diff;
+        }
+
+        function escapeHtml(text) {
+            var map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+    </script>
+</body>
+</html>
