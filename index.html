@@ -9,10 +9,10 @@
             font-size: 16px;
         }
         .highlight-add {
-            background-color: rgba(255, 0, 0, 0.3); /* 薄い赤 */
+            background-color: rgba(255, 0, 0, 0.3);
         }
         .highlight-remove {
-            background-color: rgba(0, 0, 255, 0.3); /* 薄い青 */
+            background-color: rgba(0, 0, 255, 0.3);
         }
         .container {
             display: flex;
@@ -73,8 +73,8 @@
 
             var result1Div = document.getElementById("result1");
             var result2Div = document.getElementById("result2");
-            result1Div.innerHTML = ""; // 結果をクリア
-            result2Div.innerHTML = ""; // 結果をクリア
+            result1Div.innerHTML = "";
+            result2Div.innerHTML = "";
 
             var diff = getDiff(text1, text2);
             result1Div.innerHTML = diff.text1;
